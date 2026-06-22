@@ -19,9 +19,9 @@ Needs: req
 The user specifies the version of the PlantUML JAR to be used for rendering.
 
 Covers:
-* `feat~diagram-rendering~1`
+* feat~diagram-rendering~1
 
-Needs: scn
+Needs: dsn
 
 ### Configure Output Directory
 `req~configure-output-directory~1`
@@ -30,18 +30,18 @@ The user configures the directory where the generated diagrams are saved.
 Default: `${project.build.directory}/generated-diagrams`
 
 Covers:
-* `feat~diagram-rendering~1`
+* feat~diagram-rendering~1
 
-Needs: scn
+Needs: dsn, scn
 
 ### Configure Output Format
 `req~configure-output-format~1`
 The plugin supports rendering diagrams in PNG, SVG, or both formats.
 
 Covers:
-* `feat~diagram-rendering~1`
+* feat~diagram-rendering~1
 
-Needs: scn
+Needs: dsn, scn
 
 ## Scenarios
 
@@ -52,6 +52,11 @@ Needs: scn
 **WHEN** a user executes `render`
 **THEN** the plugin renders the files to the default output directory.
 
+Covers:
+* req~configure-output-directory~1
+
+Needs: dsn
+
 ### Configure Output Directory
 `scn~configure-output-directory~1`
 **GIVEN** a source directory that contains PlantUML files
@@ -60,9 +65,9 @@ Needs: scn
 **THEN** the plugin renders the files to the configured output directory.
 
 Covers:
-* `req~configure-output-directory~1`
+* req~configure-output-directory~1
 
-Needs: impl, itest
+Needs: dsn
 
 ### Render PNG
 `scn~render-png~1`
@@ -72,9 +77,9 @@ Needs: impl, itest
 **THEN** the plugin renders the files to PNG format.
 
 Covers:
-* `req~output-format~1`
+* req~configure-output-format~1
 
-Needs: impl, itest
+Needs: dsn
 
 ### Render SVG 
 `scn~render-svg~1`
@@ -84,6 +89,6 @@ Needs: impl, itest
 **THEN** the plugin renders the files to SVG format.
 
 Covers:
-* req~output-format~1
+* req~configure-output-format~1
 
-Needs: impl, itest
+Needs: dsn
