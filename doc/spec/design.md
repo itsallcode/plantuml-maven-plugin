@@ -10,36 +10,44 @@ The plugin is implemented as a Maven Mojo. It interacts with the PlantUML librar
 
 ## Design Decisions
 
-### Dynamic PlantUML Dependency
+### How Does the Plugin use the PlantUML Library?
+
+We did not want to bundle the PlantUML library with the jar, to allow users to update independently.
+
+#### Dynamic PlantUML Dependency
 `dsn~dynamic-dependency~1`
 
 To allow the user to select the PlantUML version, the plugin does not include PlantUML as a compile-time dependency. Instead, it loads the specified version of PlantUML at runtime using Maven's dependency resolution mechanism.
 
 Rationale:
 
-This avoids a fat jar and allows the plugin to be independent of specific PlantUML versions, giving users full control.
+This avoids a fat jar and allows the plugin to be independent of specific PlantUML versions, giving users full control. Additionally, this allows using forks instead of the original PlantUML dependency (if that should ever be necessary).
 
 Covers:
-* `req~configure-plantuml-dependency~1`
+* `scn~render-using-configured-plantuml-version~1`
 
 Needs: impl
 
-### Mojo Configuration
-`dsn~mojo-config~1`
+#### Alternatives Considered
 
-The Mojo exposes parameters for `plantUmlVersion`, `outputDirectory`, and `formats`.
+We also thought about having the plugin load the PlantUML library at runtime. The UX benefit would be that the users only need to provide the version number and the configuration would be more compact.
 
-Rationale:
-
-Maven's standard configuration mechanism is used to provide a familiar experience for developers.
-
-Covers:
-* `req~configure-output-directory~1`
-* `req~configure-output-format~1`
-
-Needs: impl
+We decided against this option because it would make the code more complicated and cost flexibility in picking the dependency. Also, it would be code duplication with Maven's dependency resolution mechanism.
 
 ## Runtime Scenarios
+
+### Render Using Configured PlantUML Dependency
+`dsn~render-using-configured-plant-uml-dependency~1`
+
+**GIVEN** the PlantUML dependency is configured in the POM file
+**WHEN** he `execute()` method is called
+**THEN** the plugin uses the configured PlantUML library version to render diagrams.
+
+Covers:
+
+* `scn~render-using-configured-plantuml-version~1`
+
+Needs: impl, utest
 
 ### Render to Default Output Directory
 `dsn~render-default-output-directory~1`

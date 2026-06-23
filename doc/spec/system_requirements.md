@@ -15,11 +15,12 @@ Needs: req
 
 ## Requirements
 
-### `req~plantuml-version~1`
+### Configure PlantUML Version 
+`req~configure-plantuml-version~1`
 The user specifies the version of the PlantUML JAR to be used for rendering.
 
 Covers:
-* feat~diagram-rendering~1
+* `feat~diagram-rendering~1`
 
 Needs: scn
 
@@ -30,7 +31,7 @@ The user configures the directory where the generated diagrams are saved.
 Default: `${project.build.directory}/generated-diagrams`
 
 Covers:
-* feat~diagram-rendering~1
+* `feat~diagram-rendering~1`
 
 Needs: scn
 
@@ -39,22 +40,24 @@ Needs: scn
 The plugin supports rendering diagrams in PNG, SVG, or both formats.
 
 Covers:
-* feat~diagram-rendering~1
+* `feat~diagram-rendering~1`
 
-Needs: dsn, scn
+Needs: scn
 
 ## Scenarios
 
-### Configure PlantUML Dependency
-`scn~configure-plantuml-dependency~1`
+### Render Using Configured PlantUML Version
+`scn~render-using-configured-plantuml-version~1`
 
 **GIVEN** a source directory that contains PlantUML files
-**AND** the PlantUML dependency is configured in the POM file
+**AND** the user configured the PlantUML version
 **WHEN** a user executes `render`
-**THEN** the plugin uses the configured PlantUML dependency.
+**THEN** the plugin uses the configured PlantUML version.
 
 Covers:
-* req~plantuml-version~1
+* `req~configure-plantuml-version~1`
+
+Needs: dsn
 
 ### Render to Default Output Directory
 `scn~render-default-output-directory~1`
@@ -64,7 +67,7 @@ Covers:
 **THEN** the plugin renders the files to the default output directory.
 
 Covers:
-* req~configure-output-directory~1
+* `req~configure-output-directory~1`
 
 Needs: dsn
 
@@ -76,7 +79,7 @@ Needs: dsn
 **THEN** the plugin renders the files to the configured output directory.
 
 Covers:
-* req~configure-output-directory~1
+* `req~configure-output-directory~1`
 
 Needs: dsn
 
@@ -88,7 +91,7 @@ Needs: dsn
 **THEN** the plugin renders the files to PNG format.
 
 Covers:
-* req~configure-output-format~1
+* `req~configure-output-format~1`
 
 Needs: dsn
 
@@ -100,6 +103,6 @@ Needs: dsn
 **THEN** the plugin renders the files to SVG format.
 
 Covers:
-* req~configure-output-format~1
+* `req~configure-output-format~1`
 
 Needs: dsn
