@@ -8,15 +8,15 @@ User-facing acceptance scenarios are defined in [System Requirements](../system_
 
 We have the following requirement hierarchy in this project:
 
-| Document | Level | Artifact types | Meaning | Covers |
-|---------------------|-------|----------------|-------------------------------------------------------------------------|------------------------|
-| System Requirements | 1 | `feat` | Top level feature | |
-| | 2 | `req` | High level requirement | `feat` |
-| | 3 | `scn` | Given-when-then scenario | `req` |
-| Design | 4 | `dsn` | Design requirement | `req`, `scn` |
-| Production Code | 5 | `impl` | Implementation | `dsn` |
-| Test Code | 5 | `utest` | Unit test | `dsn` |
-| | 5 | `itest` | Integration test | `dsn` |
+| Document            | Level | Artifact types | Meaning                  | Covers       |
+|---------------------|-------|----------------|--------------------------|--------------|
+| System Requirements | 1     | `feat`         | Top level feature        |              |
+|                     | 2     | `req`          | High level requirement   | `feat`       |
+|                     | 3     | `scn`          | Given-when-then scenario | `req`        |
+| Design              | 4     | `dsn`          | Design requirement       | `req`, `scn` |
+| Production Code     | 5     | `impl`         | Implementation           | `dsn`        |
+| Test Code           | 5     | `utest`        | Unit test                | `dsn`        |
+|                     | 5     | `itest`        | Integration test         | `dsn`        |
 
 Runtime design requirements `dsn` can only cover one scenario at a time `scn`.
 
