@@ -32,7 +32,7 @@ To avoid a fat jar and keep dependencies minimal, we will use the Maven Plugin A
 
 ## Task List
 
-- [ ] Create and checkout a new Git branch `feat/1-basic-plantuml-plugin`
+- [x] Create and checkout a new Git branch `feat/1-basic-plantuml-plugin`
 
 ### Requirements And Design
 
@@ -41,7 +41,7 @@ To avoid a fat jar and keep dependencies minimal, we will use the Maven Plugin A
 - [x] Technical design scenarios for each user scenario in `doc/spec/design.md`
 - [x] Adapt quality requirements in `doc/spec/design/quality_requirements.md`
 - [x] Add OpenFastTrace Maven Plugin to the build
-- [ ] Stop and ask user for a review of the system requirements and design
+- [x] Stop and ask user for a review of the system requirements and design
 
 ### Implementation
 

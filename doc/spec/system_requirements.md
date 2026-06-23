@@ -21,7 +21,7 @@ The user specifies the version of the PlantUML JAR to be used for rendering.
 Covers:
 * feat~diagram-rendering~1
 
-Needs: dsn
+Needs: scn
 
 ### Configure Output Directory
 `req~configure-output-directory~1`
@@ -32,7 +32,7 @@ Default: `${project.build.directory}/generated-diagrams`
 Covers:
 * feat~diagram-rendering~1
 
-Needs: dsn, scn
+Needs: scn
 
 ### Configure Output Format
 `req~configure-output-format~1`
@@ -44,6 +44,17 @@ Covers:
 Needs: dsn, scn
 
 ## Scenarios
+
+### Configure PlantUML Dependency
+`scn~configure-plantuml-dependency~1`
+
+**GIVEN** a source directory that contains PlantUML files
+**AND** the PlantUML dependency is configured in the POM file
+**WHEN** a user executes `render`
+**THEN** the plugin uses the configured PlantUML dependency.
+
+Covers:
+* req~plantuml-version~1
 
 ### Render to Default Output Directory
 `scn~render-default-output-directory~1`

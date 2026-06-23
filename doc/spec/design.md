@@ -20,7 +20,7 @@ Rationale:
 This avoids a fat jar and allows the plugin to be independent of specific PlantUML versions, giving users full control.
 
 Covers:
-* `req~plantuml-version~1`
+* `req~configure-plantuml-dependency~1`
 
 Needs: impl
 
