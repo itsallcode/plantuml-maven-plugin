@@ -35,9 +35,31 @@ Covers:
 
 Needs: scn
 
+### Preserve Relative Output Paths
+`req~preserve-relative-output-paths~1`
+The plugin preserves the relative path of each rendered PlantUML source file below the configured source directory when writing output files. It does not create output directories for paths where no PlantUML source file was rendered.
+
+Rationale:
+
+This allows rendering hierarchical structures and avoids name conflicts for identical file names in different directories.
+
+Covers:
+* `feat~diagram-rendering~1`
+
+Needs: scn
+
+### Configure Source Files
+`req~configure-source-files~1`
+The user configures the source directory and include patterns that select the PlantUML files to render.
+
+Covers:
+* `feat~diagram-rendering~1`
+
+Needs: scn
+
 ### Configure Output Format
-`req~configure-output-format~1`
-The plugin supports rendering diagrams in PNG, SVG, or both formats.
+`req~configure-output-format~2`
+The user configures a single output format for rendered diagrams. The plugin supports `png` and `svg`.
 
 Covers:
 * `feat~diagram-rendering~1`
@@ -80,6 +102,30 @@ Needs: dsn
 
 Covers:
 * `req~configure-output-directory~1`
+
+Needs: dsn
+
+### Preserve Relative Output Paths
+`scn~preserve-relative-output-paths~1`
+**GIVEN** a configured source directory containing PlantUML files in nested directories
+**WHEN** a user executes `render`
+**THEN** the plugin writes each rendered diagram below the output directory using the same relative path as its source file below the source directory
+**AND** the plugin does not create output directories for paths that contain no rendered PlantUML files.
+
+Covers:
+* `req~preserve-relative-output-paths~1`
+
+Needs: dsn
+
+### Select Source Files
+`scn~select-source-files~1`
+**GIVEN** a configured source directory that contains PlantUML files
+**AND** include patterns are configured
+**WHEN** a user executes `render`
+**THEN** the plugin renders only the files matching the include patterns from the configured source directory.
+
+Covers:
+* `req~configure-source-files~1`
 
 Needs: dsn
 
