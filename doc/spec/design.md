@@ -2,39 +2,52 @@
 
 ## Introduction
 
-This document describes the architecture and design of the PlantUML Maven Plugin. It follows the arc42 template.
+This document describes the architecture of the PlantUML Maven Plugin. It follows the [arc42](https://docs.arc42.org) template.
 
-## Architecture
+## Solution Strategy
 
-The plugin is implemented as a Maven Mojo. It interacts with the PlantUML library to render diagrams.
+The plugin is implemented as a Maven Mojo. It interacts with the PlantUML library to render diagrams. The PlantUML dependency is declared by the user, not by building a fat jar.
 
-## Design Decisions
+A facade abstracts the reflective way of accessing the PlantUML classes.
 
-### How Does the Plugin use the PlantUML Library?
+## Building Block View
 
-We did not want to bundle the PlantUML library with the jar, to allow users to update independently.
+The Maven Plugin consists of a MavenMojo and a PlantUML facade.
 
-#### Dynamic PlantUML Dependency
-`dsn~dynamic-dependency~1`
+```plantuml
+@startuml
+set separator none
+hide empty members
 
-To allow the user to select the PlantUML version, the plugin does not include PlantUML as a compile-time dependency. Instead, it loads the specified version of PlantUML at runtime using Maven's dependency resolution mechanism.
+package org.itsallcode.plantumlmavenplugin {
+    class PlantUmlMojo
+    class PlantUmlFacade
+    
+    PlantUmlMojo -> PlantUmlFacade
+}
 
-Rationale:
+package net.sourceforge.plantuml {
+    class SourceFileReader
+    class FileFormatOption
+    class FileFormat
+}
 
-This avoids a fat jar and allows the plugin to be independent of specific PlantUML versions, giving users full control. Additionally, this allows using forks instead of the original PlantUML dependency (if that should ever be necessary).
+PlantUmlFacade -d-> SourceFileReader
+PlantUmlFacade -d-> FileFormatOption
+PlantUmlFacade -d-> FileFormat
 
-Covers:
-* `scn~render-using-configured-plantuml-version~1`
+@enduml
+```
 
-Needs: impl
+### Used PlantUML Classes
 
-#### Alternatives Considered
+The [`SourceFileReader`](https://github.com/plantuml/plantuml/blob/master/src/main/java/net/sourceforge/plantuml/SourceFileReader.java) — despite its name — does not only read files, but also decides where the rendered result they should go in the output directory.
 
-We also thought about having the plugin load the PlantUML library at runtime. The UX benefit would be that the users only need to provide the version number and the configuration would be more compact.
+[`FileFormat`](https://github.com/plantuml/plantuml/blob/master/src/main/java/net/sourceforge/plantuml/FileFormat.java) is an enum listing file formats PlantUML can handle with file extensions and Mime types. The facade abstracts and restricts this with `ImageFormat`.
 
-We decided against this option because it would make the code more complicated and cost flexibility in picking the dependency. Also, it would be code duplication with Maven's dependency resolution mechanism.
+[`FileFormatOption`](https://github.com/plantuml/plantuml/blob/master/src/main/java/net/sourceforge/plantuml/FileFormatOption.java) is a parameter object that be used to control a number of settings for the generated output files. 
 
-## Runtime Scenarios
+## Runtime View
 
 ### Render Using Configured PlantUML Dependency
 `dsn~render-using-configured-plant-uml-dependency~1`
@@ -97,3 +110,33 @@ Covers:
 * `scn~render-svg~1`
 
 Needs: impl
+
+## Architecture Decisions
+
+### How Does the Plugin use the PlantUML Library?
+
+We did not want to bundle the PlantUML library with the jar, to allow users to update independently.
+
+#### Dynamic PlantUML Dependency
+`dsn~dynamic-dependency~1`
+
+To allow the user to select the PlantUML version, the plugin does not include PlantUML as a compile-time dependency. Instead, it loads the specified version of PlantUML at runtime using Maven's dependency resolution mechanism.
+
+Rationale:
+
+This avoids a fat jar and allows the plugin to be independent of specific PlantUML versions, giving users full control. Additionally, this allows using forks instead of the original PlantUML dependency (if that should ever be necessary).
+
+Covers:
+* `scn~render-using-configured-plantuml-version~1`
+
+Needs: impl
+
+#### Alternatives Considered
+
+We also thought about having the plugin load the PlantUML library at runtime. The UX benefit would be that the users only need to provide the version number and the configuration would be more compact.
+
+We decided against this option because it would make the code more complicated and cost flexibility in picking the dependency. Also, it would be code duplication with Maven's dependency resolution mechanism.
+
+## Quality
+
+See ["Quality Requirements"](design/quality_requirements.md)
