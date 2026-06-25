@@ -1,4 +1,4 @@
-package org.itsallcode;
+package org.itsallcode.plantumlmavenplugin;
 
 /**
  * The image type PlantUML can produce

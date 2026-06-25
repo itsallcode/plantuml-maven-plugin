@@ -1,4 +1,4 @@
-package org.itsallcode;
+package org.itsallcode.plantumlmavenplugin;
 
 import org.apache.maven.plugin.logging.Log;
 

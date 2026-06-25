@@ -1,4 +1,4 @@
-package org.itsallcode;
+package org.itsallcode.plantumlmavenplugin;
 
 import org.junit.jupiter.api.Test;
 
