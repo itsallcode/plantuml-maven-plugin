@@ -56,4 +56,4 @@ The plugin supports the configuration shape used by `com.github.jeluard:plantuml
 
 GitHub Actions runs `mvn clean verify` for pushes to `main` and pull requests. When `SONAR_TOKEN` is configured in GitHub Actions secrets, the workflow also publishes coverage and static-analysis results to SonarCloud.
 
-SonarCloud consumes the JaCoCo XML report produced by the Maven build. The Maven Invoker based integration tests still run in CI, but their execution is not fully attributed in JaCoCo because they execute the plugin in separate Maven processes.
+SonarCloud consumes the JaCoCo XML report produced by the Maven build. The Maven Invoker based integration tests run the plugin in separate Maven processes, so the build injects a dedicated JaCoCo agent into those forked JVMs and merges their execution data with the unit-test coverage before generating the report.
