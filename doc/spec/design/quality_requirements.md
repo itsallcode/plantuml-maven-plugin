@@ -67,3 +67,15 @@ Minimal dependencies: only Maven and PlantUML at runtime. Any new third-party de
 ## OpenFastTrace Tracing
 
 OpenFastTrace tracing runs as a build breaker. The trace stays clean for all artifact types.
+
+## CI Automation
+
+GitHub Actions is the required CI platform for this repository.
+
+The CI build must:
+
+1. Run automatically for pushes to `main` and for pull requests.
+2. Execute the Maven verification path that covers unit tests, Maven Invoker integration tests, and OpenFastTrace tracing.
+3. Fail the workflow when the Maven build, tests, or trace fail.
+4. Publish code coverage artifacts or reports from the Maven build as far as the current test setup allows.
+5. Document any known coverage gaps caused by the Maven Invoker based integration-test setup instead of silently dropping coverage reporting.

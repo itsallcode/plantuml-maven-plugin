@@ -1,0 +1,17 @@
+version: 2
+
+multi-ecosystem-groups:
+  dependencies:
+    schedule:
+      interval: "monthly"
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: "dependencies"
+
+  - package-ecosystem: "maven"
+    directory: "/"
+    patterns: ["*"]
+    multi-ecosystem-group: "dependencies"
