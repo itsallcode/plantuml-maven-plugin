@@ -50,8 +50,8 @@ public class PlantUmlMojo extends AbstractMojo {
             formats = normalizeFormats(formats);
             createOutputDirectory(outputDirectory);
             renderDiagrams();
-        } catch (Exception e) {
-            throw new MojoExecutionException("Error rendering PlantUML diagrams", e);
+        } catch (Exception exception) {
+            throw new MojoExecutionException("Error rendering PlantUML diagrams", exception);
         }
     }
 
