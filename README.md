@@ -2,7 +2,26 @@
 
 This plugin renders PlantUML diagrams during a Maven build while letting the consuming project choose the PlantUML dependency version.
 
-[![Build](https://github.com/itsallcode/plantuml-maven-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/itsallcode/plantuml-maven-plugin/actions/workflows/build.yml)
+Rendered files keep their relative path below `sourceFiles.directory`, so nested diagram trees are reproduced below `outputDirectory`.
+
+## Project Information
+
+[![Build](https://github.com/itsallcode/openfasttrace/actions/workflows/build.yml/badge.svg)](https://github.com/itsallcode/openfasttrace/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/org.itsallcode/openfasttrace.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.itsallcode%22%20a%3A%22openfasttrace%22)
+
+SonarCloud status:
+
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=bugs)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Code smells](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=code_smells)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=coverage)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Duplicated Lines](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=ncloc)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=security_rating)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Technical Dept](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=sqale_index)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
 
 ## Configuration
 
@@ -32,8 +51,6 @@ The plugin supports the configuration shape used by `com.github.jeluard:plantuml
   </dependencies>
 </plugin>
 ```
-
-Rendered files keep their relative path below `sourceFiles.directory`, so nested diagram trees are reproduced below `outputDirectory`.
 
 ## CI
 
