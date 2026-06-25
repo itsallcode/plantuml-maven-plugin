@@ -20,10 +20,13 @@
         <artifactId>@project.artifactId@</artifactId>
         <version>@project.version@</version>
         <configuration>
-          <formats>
-            <format>PNG</format>
-          </formats>
-          <sourceDirectory>${basedir}/src/main/plantuml</sourceDirectory>
+          <format>png</format>
+          <sourceFiles>
+            <directory>${basedir}/src/main/plantuml</directory>
+            <includes>
+              <include>**/*.puml</include>
+            </includes>
+          </sourceFiles>
           <outputDirectory>${basedir}/target/custom-generated-diagrams</outputDirectory>
         </configuration>
         <executions>

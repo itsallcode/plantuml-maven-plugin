@@ -137,7 +137,7 @@ Needs: dsn
 **THEN** the plugin renders the files to PNG format.
 
 Covers:
-* `req~configure-output-format~1`
+* `req~configure-output-format~2`
 
 Needs: dsn
 
@@ -149,6 +149,6 @@ Needs: dsn
 **THEN** the plugin renders the files to SVG format.
 
 Covers:
-* `req~configure-output-format~1`
+* `req~configure-output-format~2`
 
 Needs: dsn

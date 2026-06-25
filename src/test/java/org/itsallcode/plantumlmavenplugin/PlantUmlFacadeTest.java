@@ -2,8 +2,9 @@ package org.itsallcode.plantumlmavenplugin;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 class PlantUmlFacadeTest {
     private enum SampleFormat {
@@ -13,7 +14,7 @@ class PlantUmlFacadeTest {
 
     @Test
     void givenEnumClassWhenResolvingConstantThenMatchingEnumConstantIsReturned() {
-        assertEquals(SampleFormat.SVG, PlantUmlFacade.resolveEnumConstant(SampleFormat.class, "SVG"));
+        assertThat(PlantUmlFacade.resolveEnumConstant(SampleFormat.class, "SVG"), is(SampleFormat.SVG));
     }
 
     @Test

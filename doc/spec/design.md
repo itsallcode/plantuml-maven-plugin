@@ -60,7 +60,7 @@ Covers:
 
 * `scn~render-using-configured-plantuml-version~1`
 
-Needs: impl, utest
+Needs: impl
 
 ### Render to Default Output Directory
 `dsn~render-default-output-directory~1`
@@ -87,7 +87,7 @@ Needs: impl
 Covers:
 * `scn~preserve-relative-output-paths~1`
 
-Needs: impl, itest
+Needs: impl, utest, itest
 
 ### Configure Output Directory
 `dsn~configure-output-directory~1`

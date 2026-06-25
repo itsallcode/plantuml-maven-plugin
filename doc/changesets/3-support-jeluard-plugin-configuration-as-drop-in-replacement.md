@@ -38,26 +38,26 @@ The current implementation exposes `formats` and `sourceDirectory`, while GH-3 a
 
 ### Requirements And Design
 
-- [ ] Update `doc/spec/system_requirements.md` to cover legacy-compatible source file selection, singular output format configuration, and the expected meaning of `outputDirectory` for replacement scenarios.
-- [ ] Stop and ask user for a review of the system requirements
-- [ ] Update `doc/spec/design.md` with runtime design for nested `sourceFiles` binding, include-glob filtering, and singular `format` handling; forward unchanged output-directory behavior where no extra design detail is needed.
-- [ ] Stop and ask user for a review of the design
+- [x] Update `doc/spec/system_requirements.md` to cover legacy-compatible source file selection, singular output format configuration, and the expected meaning of `outputDirectory` for replacement scenarios.
+- [x] Stop and ask user for a review of the system requirements
+- [x] Update `doc/spec/design.md` with runtime design for nested `sourceFiles` binding, include-glob filtering, and singular `format` handling; forward unchanged output-directory behavior where no extra design detail is needed.
+- [x] Stop and ask user for a review of the design
 
 ### Implementation
 
-- [ ] Refactor `PlantUmlMojo` parameter binding to accept `sourceFiles.directory`, `sourceFiles.includes.include`, `format`, and `outputDirectory`, and remove the current `formats`-based public configuration model.
-- [ ] Implement source file discovery that scans the configured source directory recursively, keeps established PlantUML suffixes, and filters matches with the configured include globs.
-- [ ] Keep rendering behavior aligned with the selected single output format and configured output directory without changing the dynamic PlantUML dependency approach.
-- [ ] Add or update user-facing documentation for the replacement configuration model; create the documentation file if the repository still has no existing user guide entry point.
+- [x] Refactor `PlantUmlMojo` parameter binding to accept `sourceFiles.directory`, `sourceFiles.includes.include`, `format`, and `outputDirectory`, and remove the current `formats`-based public configuration model.
+- [x] Implement source file discovery that scans the configured source directory recursively, keeps established PlantUML suffixes, and filters matches with the configured include globs.
+- [x] Keep rendering behavior aligned with the selected single output format and configured output directory without changing the dynamic PlantUML dependency approach.
+- [x] Add or update user-facing documentation for the replacement configuration model; create the documentation file if the repository still has no existing user guide entry point.
 
 ### Verification
 
-- [ ] Extend unit tests for singular format normalization, invalid format rejection, and source-file selection validation.
-- [ ] Add an integration test project that uses a legacy-style POM snippet and verifies selected source files, generated format, and configured output location.
-- [ ] Keep the OpenFastTrace trace clean.
-- [ ] Keep `mvn verify` and the Maven Invoker integration tests green.
+- [x] Extend unit tests for singular format normalization, invalid format rejection, and source-file selection validation.
+- [x] Add an integration test project that uses a legacy-style POM snippet and verifies selected source files, generated format, and configured output location.
+- [x] Keep the OpenFastTrace trace clean.
+- [x] Keep `mvn verify` and the Maven Invoker integration tests green.
 
 ### Version and Changelog Update
 
-- [ ] Raise the version to 0.2.0 (feature release)
-- [ ] Create or update the changelog entry for 0.2.0
+- [x] Raise the version to 0.2.0 (feature release)
+- [x] Create or update the changelog entry for 0.2.0
