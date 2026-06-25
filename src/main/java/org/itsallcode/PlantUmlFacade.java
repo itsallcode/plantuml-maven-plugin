@@ -57,11 +57,13 @@ public class PlantUmlFacade {
             final Object fileFormat = resolveEnumConstant(this.fileFormatClass, imageType.name());
             final Constructor<?> optionConstructor = fileFormatOptionClass.getConstructor(fileFormatClass);
             final Object options = optionConstructor.newInstance(fileFormat);
-            final Constructor<?> readerConstructor = this.sourceFileReaderClass.getConstructor(boolean.class, File.class, File.class, this.fileFormatOptionClass);
+            final Constructor<?> readerConstructor = this.sourceFileReaderClass.getConstructor(boolean.class, File.class
+                    , File.class, this.fileFormatOptionClass);
             final Object reader = readerConstructor.newInstance(false, inputFile, outputDirectory, options);
             final Method getGeneratedImagesMethod = this.sourceFileReaderClass.getMethod("getGeneratedImages");
             getGeneratedImagesMethod.invoke(reader);
-        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException exception) {
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException
+                 | IllegalAccessException exception) {
             throw new RuntimeException(exception);
         }
     }
@@ -73,6 +75,7 @@ public class PlantUmlFacade {
         return Arrays.stream(enumClass.getEnumConstants())
                 .filter(constant -> ((Enum<?>) constant).name().equals(constantName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Enum constant '" + constantName + "' not found in '" + enumClass.getName() + "'"));
+                .orElseThrow(() -> new IllegalArgumentException("Enum constant '" + constantName + "' not found in '"
+                        + enumClass.getName() + "'"));
     }
 }
