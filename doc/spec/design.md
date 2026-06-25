@@ -77,7 +77,7 @@ Needs: impl
 ### Render PNG
 `dsn~render-png~1`
 
-**GIVEN** the `formats` Mojo parameter includes `PNG`
+**GIVEN** the `formats` Mojo parameter includes `PNG` (case-insensitive)
 **WHEN** the `execute()` method is called
 **THEN** the plugin configures the PlantUML `FileFormatOption` to `PNG` for each input file.
 
@@ -89,7 +89,7 @@ Needs: impl
 ### Render SVG
 `dsn~render-svg~1`
 
-**GIVEN** the `formats` Mojo parameter includes `SVG`
+**GIVEN** the `formats` Mojo parameter includes `SVG` (case-insensitive)
 **WHEN** the `execute()` method is called
 **THEN** the plugin configures the PlantUML `FileFormatOption` to `SVG` for each input file.
 

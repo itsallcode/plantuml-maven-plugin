@@ -1,3 +1,6 @@
 @startuml
+' [itest->dsn~render-png~1]
+' [itest->dsn~render-svg~1]
+' [itest->dsn~render-default-output-directory~1]
 Alice -> Bob: Hello
 @enduml

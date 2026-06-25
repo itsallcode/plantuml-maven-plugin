@@ -1,0 +1,4 @@
+@startuml
+' [itest->dsn~configure-output-directory~1]
+Alice -> Bob: configured output directory
+@enduml

@@ -1,0 +1,9 @@
+File target = new File(basedir, "target/custom-generated-diagrams");
+if (!target.exists() || !target.isDirectory()) {
+    throw new RuntimeException("Expected configured output directory at " + target);
+}
+
+File pngFile = new File(target, "test.png");
+if (!pngFile.exists()) {
+    throw new RuntimeException("Expected PNG output at " + pngFile);
+}

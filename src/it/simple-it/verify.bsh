@@ -1,0 +1,14 @@
+File target = new File(basedir, "target/generated-diagrams");
+if (!target.exists() || !target.isDirectory()) {
+    throw new RuntimeException("Expected generated diagrams directory at " + target);
+}
+
+File pngFile = new File(target, "test.png");
+if (!pngFile.exists()) {
+    throw new RuntimeException("Expected PNG output at " + pngFile);
+}
+
+File svgFile = new File(target, "test.svg");
+if (!svgFile.exists()) {
+    throw new RuntimeException("Expected SVG output at " + svgFile);
+}

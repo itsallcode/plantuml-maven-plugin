@@ -45,16 +45,16 @@ To avoid a fat jar and keep dependencies minimal, we will use the Maven Plugin A
 
 ### Implementation
 
-- [ ] Update `pom.xml` with necessary Maven dependencies for Mojo development and dynamic dependency resolution.
-- [ ] Implement `PlantUmlMojo` with configuration parameters for `plantUmlVersion`, `outputDirectory`, and `formats`.
-- [ ] Implement logic to invoke PlantUML via reflection after loading the JAR at runtime.
+- [x] Update `pom.xml` with necessary Maven dependencies for Mojo development and dynamic dependency resolution.
+- [x] Implement `PlantUmlMojo` with configuration parameters for `plantUmlVersion`, `outputDirectory`, and `formats`.
+- [x] Implement logic to invoke PlantUML via reflection after loading the JAR at runtime.
 
 ### Verification
 
-- [ ] Create an integration test (IT) that uses the plugin to generate PNG and SVG diagrams.
-- [ ] Verify that the output files exist in the expected directory.
-- [ ] Keep the OpenFastTrace trace clean.
-- [ ] Keep required build and plugin verification tasks green.
+- [x] Create an integration test (IT) that uses the plugin to generate PNG and SVG diagrams.
+- [x] Verify that the output files exist in the expected directory.
+- [x] Keep the OpenFastTrace trace clean.
+- [x] Keep required build and plugin verification tasks green.
 
 ### Update user documentation
 
