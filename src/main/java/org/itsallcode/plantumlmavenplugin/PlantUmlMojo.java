@@ -8,6 +8,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,22 +26,23 @@ public class PlantUmlMojo extends AbstractMojo {
      */
     // [impl->dsn~configure-output-directory~1]
     // [impl->dsn~render-default-output-directory~1]
+    private static final List<String> DEFAULT_INCLUDE_PATTERNS = List.of("**/*.puml", "**/*.plantuml", "**/*.iuml");
+
     @Parameter(defaultValue = "${project.build.directory}/generated-diagrams", property = "outputDirectory")
     private File outputDirectory;
 
     /**
-     * Output formats to generate.
-     * Supported values are {@code PNG} and {@code SVG}.
+     * Output format to generate.
+     * Supported values are {@code png} and {@code svg}.
      */
-    @Parameter(property = "formats")
-    private List<String> formats;
+    @Parameter(property = "format")
+    private String format;
 
     /**
-     * Source directory that is scanned recursively for PlantUML files.
-     * Supported suffixes are {@code .puml}, {@code .plantuml}, and {@code .iuml}.
+     * Source file selection configuration.
      */
-    @Parameter(defaultValue = "${basedir}/src/main/resources", property = "sourceDirectory")
-    private File sourceDirectory;
+    @Parameter
+    private SourceFiles sourceFiles;
 
     /**
      * Executes the rendering goal.
@@ -47,47 +51,58 @@ public class PlantUmlMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException {
         try {
-            formats = normalizeFormats(formats);
+            final ImageType imageType = normalizeFormat(format);
+            final SourceSelection sourceSelection = normalizeSourceFiles(sourceFiles);
             createOutputDirectory(outputDirectory);
-            renderDiagrams();
-        } catch (Exception e) {
-            throw new MojoExecutionException("Error rendering PlantUML diagrams", e);
+            renderDiagrams(imageType, sourceSelection);
+        } catch (final Exception exception) {
+            throw new MojoExecutionException("Error rendering PlantUML diagrams", exception);
         }
     }
 
     /**
-     * Normalizes the configured output formats and applies the default format when none was configured.
+     * Normalizes the configured output format and applies the default format when none was configured.
      *
-     * @param configuredFormats raw formats from plugin configuration
-     * @return validated uppercase format names
+     * @param configuredFormat raw format from plugin configuration
+     * @return validated image type
      */
-    List<String> normalizeFormats(final List<String> configuredFormats) {
-        if (configuredFormats == null || configuredFormats.isEmpty()) {
-            return List.of("PNG");
+    ImageType normalizeFormat(final String configuredFormat) {
+        if (configuredFormat == null) {
+            return ImageType.PNG;
         }
-        final List<String> normalizedFormats = new ArrayList<>(configuredFormats.size());
-        for (final String configuredFormat : configuredFormats) {
-            final String normalizedFormat = normalizeFormat(configuredFormat);
-            if (!"PNG".equals(normalizedFormat) && !"SVG".equals(normalizedFormat)) {
-                throw new IllegalArgumentException("Unsupported PlantUML output format '" + configuredFormat
-                        + "'. Chose one of: PNG, SVG");
+        if (configuredFormat.trim().isEmpty()) {
+            throw new IllegalArgumentException("PlantUML output format must not be blank");
+        }
+        final String normalizedFormat = configuredFormat.trim().toUpperCase(Locale.ROOT);
+        try {
+            return ImageType.valueOf(normalizedFormat);
+        } catch (final IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Unsupported PlantUML output format '" + configuredFormat
+                    + "'. Choose one of: png, svg", exception);
+        }
+    }
+
+    SourceSelection normalizeSourceFiles(final SourceFiles configuredSourceFiles) {
+        if (configuredSourceFiles == null || configuredSourceFiles.directory == null) {
+            throw new IllegalArgumentException("sourceFiles.directory must not be null");
+        }
+        return new SourceSelection(configuredSourceFiles.directory, compileMatchers(configuredSourceFiles.includes()));
+    }
+
+    List<PathMatcher> compileMatchers(final List<String> includes) {
+        final List<String> patterns = (includes == null || includes.isEmpty()) ? DEFAULT_INCLUDE_PATTERNS : includes;
+        final List<PathMatcher> matchers = new ArrayList<>(patterns.size());
+        for (final String pattern : patterns) {
+            if (pattern == null || pattern.trim().isEmpty()) {
+                throw new IllegalArgumentException("sourceFiles.includes.include must not contain blank patterns");
             }
-            normalizedFormats.add(normalizedFormat);
+            final String trimmedPattern = pattern.trim();
+            matchers.add(FileSystems.getDefault().getPathMatcher("glob:" + trimmedPattern));
+            if (trimmedPattern.startsWith("**/")) {
+                matchers.add(FileSystems.getDefault().getPathMatcher("glob:" + trimmedPattern.substring(3)));
+            }
         }
-        return normalizedFormats;
-    }
-
-    /**
-     * Trims and uppercases a single configured output format.
-     *
-     * @param configuredFormat raw format value from plugin configuration
-     * @return normalized uppercase format name
-     */
-    String normalizeFormat(final String configuredFormat) {
-        if (configuredFormat == null || configuredFormat.trim().isEmpty()) {
-            throw new IllegalArgumentException("PlantUML output formats must not be blank");
-        }
-        return configuredFormat.trim().toUpperCase(Locale.ROOT);
+        return matchers;
     }
 
     private void createOutputDirectory(final File directory) throws IOException {
@@ -104,40 +119,51 @@ public class PlantUmlMojo extends AbstractMojo {
 
     // [impl->dsn~dynamic-dependency~1]
     // [impl->dsn~render-using-configured-plant-uml-dependency~1]
-    private void renderDiagrams() {
-        if (sourceDirectory == null) {
-            throw new IllegalArgumentException("Source directory must not be null");
-        }
-        final List<File> files = findPlantUmlFiles(sourceDirectory);
+    private void renderDiagrams(final ImageType imageType, final SourceSelection sourceSelection) {
+        final List<File> files = findPlantUmlFiles(sourceSelection);
         if (files.isEmpty()) {
-            getLog().info("No PlantUML files found in " + sourceDirectory);
+            getLog().info("No PlantUML files found in " + sourceSelection.directory);
             return;
         }
-
-        for (final String format : formats) {
-            for (final File file : files) {
-                renderFile(format, file);
-            }
+        final PlantUmlFacade plantUmlFacade = new PlantUmlFacade(this.getLog());
+        for (final File file : files) {
+            renderFile(imageType, file, sourceSelection.directory, plantUmlFacade);
         }
     }
 
     // [impl->dsn~render-png~1]
     // [impl->dsn~render-svg~1]
-    private void renderFile(final String format, final File file) {
-        // We load the facade as late as possible to allow unit testing the other Mojo functions
-        final PlantUmlFacade plantUmlFacade = new PlantUmlFacade(this.getLog());
-        plantUmlFacade.renderFileToDirectory(file, this.outputDirectory, ImageType.valueOf(format));
+    // [impl->dsn~preserve-relative-output-paths~1]
+    private void renderFile(final ImageType imageType, final File file, final File sourceDirectory,
+            final PlantUmlFacade plantUmlFacade) {
+        plantUmlFacade.renderFileToDirectory(file, resolveOutputDirectoryFor(file, sourceDirectory), imageType);
     }
 
-    private List<File> findPlantUmlFiles(final File dir) {
+    File resolveOutputDirectoryFor(final File inputFile, final File sourceDirectory) {
+        final Path sourcePath = sourceDirectory.toPath().toAbsolutePath().normalize();
+        final Path filePath = inputFile.toPath().toAbsolutePath().normalize();
+        final Path relativePath = sourcePath.relativize(filePath);
+        final Path relativeParent = relativePath.getParent();
+        if (relativeParent == null) {
+            return outputDirectory;
+        }
+        return outputDirectory.toPath().resolve(relativeParent).toFile();
+    }
+
+    List<File> findPlantUmlFiles(final SourceSelection sourceSelection) {
+        return findPlantUmlFiles(sourceSelection.directory, sourceSelection.directory.toPath().toAbsolutePath().normalize(),
+                sourceSelection.includes);
+    }
+
+    private List<File> findPlantUmlFiles(final File dir, final Path sourceRoot, final List<PathMatcher> includes) {
         final List<File> result = new ArrayList<>();
         if (dir.exists() && dir.isDirectory()) {
             final File[] files = dir.listFiles();
             if (files != null) {
                 for (final File file : files) {
                     if (file.isDirectory()) {
-                        result.addAll(findPlantUmlFiles(file));
-                    } else if (isPlantUmlFile(file.getName())) {
+                        result.addAll(findPlantUmlFiles(file, sourceRoot, includes));
+                    } else if (isIncludedPlantUmlFile(file, sourceRoot, includes)) {
                         result.add(file);
                     }
                 }
@@ -146,7 +172,58 @@ public class PlantUmlMojo extends AbstractMojo {
         return result;
     }
 
+    // [impl->dsn~select-source-files~1]
+    boolean isIncludedPlantUmlFile(final File file, final Path sourceRoot, final List<PathMatcher> includes) {
+        if (!isPlantUmlFile(file.getName())) {
+            return false;
+        }
+        final Path relativePath = sourceRoot.relativize(file.toPath().toAbsolutePath().normalize());
+        return includes.stream().anyMatch(matcher -> matcher.matches(relativePath));
+    }
+
     private boolean isPlantUmlFile(final String name) {
         return name.endsWith(".puml") || name.endsWith(".plantuml") || name.endsWith(".iuml");
+    }
+
+    static final class SourceSelection {
+        private final File directory;
+        private final List<PathMatcher> includes;
+
+        private SourceSelection(final File directory, final List<PathMatcher> includes) {
+            this.directory = directory;
+            this.includes = includes;
+        }
+    }
+
+    public static final class SourceFiles {
+        @Parameter(property = "sourceFiles.directory")
+        private File directory;
+
+        @Parameter
+        private Includes includes;
+
+        public SourceFiles() {
+        }
+
+        SourceFiles(final File directory, final List<String> includes) {
+            this.directory = directory;
+            this.includes = new Includes(includes);
+        }
+
+        private List<String> includes() {
+            return (includes == null) ? null : includes.include;
+        }
+    }
+
+    public static final class Includes {
+        @Parameter
+        private List<String> include;
+
+        public Includes() {
+        }
+
+        Includes(final List<String> include) {
+            this.include = include;
+        }
     }
 }

@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.itsallcode.it</groupId>
-  <artifactId>simple-it</artifactId>
+  <artifactId>legacy-source-selection-it</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <description>A simple IT verifying the basic use case.</description>
+  <description>Verifies legacy source selection and preserved relative output paths.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,14 +19,17 @@
         <groupId>@project.groupId@</groupId>
         <artifactId>@project.artifactId@</artifactId>
         <version>@project.version@</version>
+        <!-- [itest->dsn~select-source-files~1] -->
+        <!-- [itest->dsn~preserve-relative-output-paths~1] -->
         <configuration>
-          <format>svg</format>
+          <format>png</format>
           <sourceFiles>
-            <directory>${basedir}/src/main/plantuml</directory>
+            <directory>${basedir}/model/diagrams</directory>
             <includes>
-              <include>**/*.puml</include>
+              <include>*/*/*.puml</include>
             </includes>
           </sourceFiles>
+          <outputDirectory>${basedir}/target/custom-generated-diagrams</outputDirectory>
         </configuration>
         <executions>
           <execution>

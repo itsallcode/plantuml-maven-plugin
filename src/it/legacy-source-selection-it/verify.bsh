@@ -1,0 +1,24 @@
+File target = new File(basedir, "target/custom-generated-diagrams");
+if (!target.exists() || !target.isDirectory()) {
+    throw new RuntimeException("Expected configured output directory at " + target);
+}
+
+File architectureOutput = new File(target, "architecture/context/system.png");
+if (!architectureOutput.exists()) {
+    throw new RuntimeException("Expected architecture PNG output at " + architectureOutput);
+}
+
+File landscapeOutput = new File(target, "landscape/container/app.png");
+if (!landscapeOutput.exists()) {
+    throw new RuntimeException("Expected landscape PNG output at " + landscapeOutput);
+}
+
+File ignoredFile = new File(target, "architecture/deployment/network.png");
+if (ignoredFile.exists()) {
+    throw new RuntimeException("Did not expect non-PlantUML input to produce output at " + ignoredFile);
+}
+
+File emptyDirectory = new File(target, "empty");
+if (emptyDirectory.exists()) {
+    throw new RuntimeException("Did not expect output directory without rendered files at " + emptyDirectory);
+}

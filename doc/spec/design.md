@@ -60,7 +60,7 @@ Covers:
 
 * `scn~render-using-configured-plantuml-version~1`
 
-Needs: impl, utest
+Needs: impl
 
 ### Render to Default Output Directory
 `dsn~render-default-output-directory~1`
@@ -75,6 +75,20 @@ Covers:
 
 Needs: impl
 
+### Preserve Relative Output Paths
+`dsn~preserve-relative-output-paths~1`
+
+**GIVEN** a rendered PlantUML source file is located below the configured source directory
+**WHEN** the `execute()` method renders the file
+**THEN** the plugin resolves the file's relative path below the source directory
+**AND** writes the rendered output below the configured output directory using that same relative path
+**AND** creates only output directories that are required for rendered PlantUML files.
+
+Covers:
+* `scn~preserve-relative-output-paths~1`
+
+Needs: impl, utest, itest
+
 ### Configure Output Directory
 `dsn~configure-output-directory~1`
 
@@ -87,12 +101,26 @@ Covers:
 
 Needs: impl
 
+### Select Source Files
+`dsn~select-source-files~1`
+
+**GIVEN** the Mojo parameter `sourceFiles.directory` is set
+**AND** the Mojo parameter `sourceFiles.includes.include` contains glob patterns
+**WHEN** the `execute()` method discovers PlantUML source files
+**THEN** the plugin scans recursively below the configured source directory
+**AND** keeps only files with established PlantUML suffixes whose relative path matches one of the configured include patterns.
+
+Covers:
+* `scn~select-source-files~1`
+
+Needs: impl, utest, itest
+
 ### Render PNG
 `dsn~render-png~1`
 
-**GIVEN** the `formats` Mojo parameter includes `PNG` (case-insensitive)
+**GIVEN** the `format` Mojo parameter is `png` (case-insensitive)
 **WHEN** the `execute()` method is called
-**THEN** the plugin configures the PlantUML `FileFormatOption` to `PNG` for each input file.
+**THEN** the plugin configures the PlantUML `FileFormatOption` to `PNG` for each selected input file.
 
 Covers:
 * `scn~render-png~1`
@@ -102,9 +130,9 @@ Needs: impl
 ### Render SVG
 `dsn~render-svg~1`
 
-**GIVEN** the `formats` Mojo parameter includes `SVG` (case-insensitive)
+**GIVEN** the `format` Mojo parameter is `svg` (case-insensitive)
 **WHEN** the `execute()` method is called
-**THEN** the plugin configures the PlantUML `FileFormatOption` to `SVG` for each input file.
+**THEN** the plugin configures the PlantUML `FileFormatOption` to `SVG` for each selected input file.
 
 Covers:
 * `scn~render-svg~1`
