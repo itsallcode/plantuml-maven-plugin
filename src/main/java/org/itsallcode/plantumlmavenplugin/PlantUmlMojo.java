@@ -147,14 +147,14 @@ public class PlantUmlMojo extends AbstractMojo {
         return outputDirectory.toPath().resolve(relativeParent).toFile();
     }
 
-    List<File> findPlantUmlFiles(final SourceSelection sourceSelection) {
+    static List<File> findPlantUmlFiles(final SourceSelection sourceSelection) {
         return findPlantUmlFiles(sourceSelection.directory,
                 sourceSelection.directory.toPath().toAbsolutePath().normalize(),
                 sourceSelection.includes);
     }
 
     @SuppressWarnings("java:S134") // Splitting this if-cascade makes the code less readable
-    private List<File> findPlantUmlFiles(final File dir, final Path sourceRoot, final List<PathMatcher> includes) {
+    private static List<File> findPlantUmlFiles(final File dir, final Path sourceRoot, final List<PathMatcher> includes) {
         final List<File> result = new ArrayList<>();
         if (dir.exists() && dir.isDirectory()) {
             final File[] files = dir.listFiles();
