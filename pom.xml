@@ -4,7 +4,7 @@
 
   <groupId>org.itsallcode</groupId>
   <artifactId>plantuml-maven-plugin</artifactId>
-  <version>0.2.0</version>
+  <version>1.0.0</version>
   <packaging>maven-plugin</packaging>
   <name>plantuml-maven-plugin Maven Plugin</name>
   <url>http://github.com/itsallcode/plantuml-maven-plugin</url>
