@@ -338,7 +338,7 @@
         <configuration>
           <filesets>
             <fileset>
-              <directory>src/test/resources</directory>
+              <directory>src/it/</directory>
               <includes>
                 <include>*/target/**</include>
               </includes>
