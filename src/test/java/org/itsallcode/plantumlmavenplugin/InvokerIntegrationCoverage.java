@@ -1,10 +1,14 @@
 package org.itsallcode.plantumlmavenplugin;
 
 /**
- * Trace markers for invoker-based integration tests under {@code src/it}, which OpenFastTrace does not scan directly.
+ * Trace markers for invoker-based integration tests under {@code src/it}, which
+ * OpenFastTrace does not scan directly.
  */
-final class InvokerIntegrationCoverage {
-    private InvokerIntegrationCoverage() {
+final class InvokerIntegrationCoverage
+{
+    private InvokerIntegrationCoverage()
+    {
+        // Intenionally blank
     }
 
     // [itest->dsn~select-source-files~1]
