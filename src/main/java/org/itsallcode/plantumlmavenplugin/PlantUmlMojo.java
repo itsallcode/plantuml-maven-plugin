@@ -132,7 +132,7 @@ public class PlantUmlMojo extends AbstractMojo {
     // [impl->dsn~render-svg~1]
     // [impl->dsn~preserve-relative-output-paths~1]
     private void renderFile(final ImageType imageType, final File file, final File sourceDirectory,
-            final PlantUmlFacade plantUmlFacade) {
+                            final PlantUmlFacade plantUmlFacade) {
         plantUmlFacade.renderFileToDirectory(file, resolveOutputDirectoryFor(file, sourceDirectory), imageType);
     }
 
@@ -154,7 +154,8 @@ public class PlantUmlMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("java:S134") // Splitting this if-cascade makes the code less readable
-    private static List<File> findPlantUmlFiles(final File dir, final Path sourceRoot, final List<PathMatcher> includes) {
+    private static List<File> findPlantUmlFiles(final File dir, final Path sourceRoot,
+                                                final List<PathMatcher> includes) {
         final List<File> result = new ArrayList<>();
         if (dir.exists() && dir.isDirectory()) {
             final File[] files = dir.listFiles();
