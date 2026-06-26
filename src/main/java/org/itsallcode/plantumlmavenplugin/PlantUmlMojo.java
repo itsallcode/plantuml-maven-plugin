@@ -8,6 +8,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -50,14 +51,10 @@ public class PlantUmlMojo extends AbstractMojo {
      * @throws MojoExecutionException if format validation, output directory creation, or rendering fails
      */
     public void execute() throws MojoExecutionException {
-        try {
-            final ImageType imageType = normalizeFormat(format);
-            final SourceSelection sourceSelection = normalizeSourceFiles(sourceFiles);
-            createOutputDirectory(outputDirectory);
-            renderDiagrams(imageType, sourceSelection);
-        } catch (final Exception exception) {
-            throw new MojoExecutionException("Error rendering PlantUML diagrams", exception);
-        }
+        final ImageType imageType = normalizeFormat(format);
+        final SourceSelection sourceSelection = normalizeSourceFiles(sourceFiles);
+        createOutputDirectory(outputDirectory);
+        renderDiagrams(imageType, sourceSelection);
     }
 
     /**
@@ -105,15 +102,15 @@ public class PlantUmlMojo extends AbstractMojo {
         return matchers;
     }
 
-    private void createOutputDirectory(final File directory) throws IOException {
+    private static void createOutputDirectory(final File directory) {
         if (directory == null) {
             throw new IllegalArgumentException("Output directory must not be null");
         }
         if (directory.exists() && !directory.isDirectory()) {
-            throw new IOException("Output path is not a directory: " + directory);
+            throw new UncheckedIOException(new IOException("Output path is not a directory: " + directory));
         }
         if (!directory.exists() && !directory.mkdirs()) {
-            throw new IOException("Could not create output directory " + directory);
+            throw new UncheckedIOException(new IOException("Could not create output directory " + directory));
         }
     }
 
@@ -151,10 +148,12 @@ public class PlantUmlMojo extends AbstractMojo {
     }
 
     List<File> findPlantUmlFiles(final SourceSelection sourceSelection) {
-        return findPlantUmlFiles(sourceSelection.directory, sourceSelection.directory.toPath().toAbsolutePath().normalize(),
+        return findPlantUmlFiles(sourceSelection.directory,
+                sourceSelection.directory.toPath().toAbsolutePath().normalize(),
                 sourceSelection.includes);
     }
 
+    @SuppressWarnings("java:S134") // Splitting this if-cascade makes the code less readable
     private List<File> findPlantUmlFiles(final File dir, final Path sourceRoot, final List<PathMatcher> includes) {
         final List<File> result = new ArrayList<>();
         if (dir.exists() && dir.isDirectory()) {
@@ -173,7 +172,7 @@ public class PlantUmlMojo extends AbstractMojo {
     }
 
     // [impl->dsn~select-source-files~1]
-    boolean isIncludedPlantUmlFile(final File file, final Path sourceRoot, final List<PathMatcher> includes) {
+    static boolean isIncludedPlantUmlFile(final File file, final Path sourceRoot, final List<PathMatcher> includes) {
         if (!isPlantUmlFile(file.getName())) {
             return false;
         }
@@ -181,7 +180,7 @@ public class PlantUmlMojo extends AbstractMojo {
         return includes.stream().anyMatch(matcher -> matcher.matches(relativePath));
     }
 
-    private boolean isPlantUmlFile(final String name) {
+    private static boolean isPlantUmlFile(final String name) {
         return name.endsWith(".puml") || name.endsWith(".plantuml") || name.endsWith(".iuml");
     }
 
@@ -223,7 +222,7 @@ public class PlantUmlMojo extends AbstractMojo {
         }
 
         Includes(final List<String> include) {
-            this.include = include;
+            this.include = List.copyOf(include);
         }
     }
 }
