@@ -12,8 +12,9 @@ target/
 
 
 
-### VS Code ###
-.vscode/
+### VS Code / Eclipse ###
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.jdt.apt.core.prefs
 
 ### Mac OS ###
 .DS_Store
