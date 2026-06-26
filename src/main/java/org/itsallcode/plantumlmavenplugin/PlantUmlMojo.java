@@ -183,8 +183,8 @@ public class PlantUmlMojo extends AbstractMojo
                 sourceSelection.includes);
     }
 
-    @SuppressWarnings("java:S134") // Splitting this if-cascade makes the code
-                                   // less readable
+    @SuppressWarnings({ "java:S134", "java:S126" }) // Tf-cascade more
+                                                    // readable here
     private static List<File> findPlantUmlFiles(final File dir, final Path sourceRoot,
             final List<PathMatcher> includes)
     {
