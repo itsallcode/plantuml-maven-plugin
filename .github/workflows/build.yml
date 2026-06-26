@@ -43,13 +43,14 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build, test, and trace
-        run: mvn --batch-mode clean verify -Djava.version=${{ matrix.java }}
+        run: mvn --batch-mode clean verify -DossindexSkip=true -Djava.version=${{ matrix.java }}
 
       - name: Sonar analysis
         if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -Dsonar.token=$SONAR_TOKEN \
+              -DossindexSkip=true \
               -Djava.version=${{ matrix.java }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,14 +76,16 @@ jobs:
     - name: Ossindex
       if: ${{ env.OSSINDEX_USERNAME != null && env.OSSINDEX_TOKEN != null }}
       run: |
-        mvn --errors --batch-mode test-compile -Djava.version=17 \
+        mvn --errors --batch-mode test-compile \
             org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
-            org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate
+            org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
+            -DossindexSkip=false
       env:
         OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
         OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
 
   build:
+    name: Build
     permissions:
       contents: read
     needs:
