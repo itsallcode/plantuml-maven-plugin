@@ -1,11 +1,15 @@
 package org.itsallcode.plantumlmavenplugin;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -111,6 +115,37 @@ class PlantUmlMojoTest
         final File resolvedOutputDirectory = mojo.resolveOutputDirectoryFor(inputFile, sourceDirectory);
 
         assertThat(resolvedOutputDirectory, is(outputDirectory));
+    }
+
+    @Test
+    void givenNullOutputDirectoryWhenCreatingOutputDirectoryThenThrowsIllegalArgumentException ()
+    {
+        assertThrows(IllegalArgumentException.class, () -> PlantUmlMojo.createOutputDirectory(null));
+    }
+
+    @Test
+    void givenFileInTheWayWhenCreatingOutputDirectoryThenThrowsUncheckedIOException(final @TempDir Path tempDir)
+            throws IOException {
+        final Path offendingFilePath = tempDir.resolve("offendingFile");
+        Files.createFile(offendingFilePath);
+        final File offendingFile = offendingFilePath.toFile();
+        assertThrows(UncheckedIOException.class, () -> PlantUmlMojo.createOutputDirectory(offendingFile));
+    }
+
+    @Test
+    void givenParentDirectoryReadOnlyWhenCreatingOutputDirectoryThenThrowsUncheckedIOException(
+            final @TempDir Path tempDir) throws IOException {
+        final Path readOnlyPath = tempDir.resolve("readOnlyDir");
+        Files.createDirectory(readOnlyPath);
+        if(readOnlyPath.toFile().setReadOnly())
+        {
+            final File outputDirectory = readOnlyPath.resolve("output").toFile();
+            assertThrows(UncheckedIOException.class, () -> PlantUmlMojo.createOutputDirectory(outputDirectory));
+        }
+        else
+        {
+            throw new AssertionError("Could not create read-only directory");
+        }
     }
 
     private static void setField(final Object target, final String fieldName, final Object value) throws Exception

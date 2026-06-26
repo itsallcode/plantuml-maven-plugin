@@ -121,7 +121,7 @@ public class PlantUmlMojo extends AbstractMojo
         return matchers;
     }
 
-    private static void createOutputDirectory(final File directory)
+    static void createOutputDirectory(final File directory)
     {
         if (directory == null)
         {
@@ -262,13 +262,20 @@ public class PlantUmlMojo extends AbstractMojo
         }
     }
 
+    /**
+     * File include configuration.
+     */
     public static final class Includes
     {
         @Parameter
         private List<String> include;
 
+        /**
+         * Create a new instance of the file includes.
+         */
         public Includes()
         {
+            // Intentionally empty
         }
 
         Includes(final List<String> include)
