@@ -118,14 +118,15 @@ class PlantUmlMojoTest
     }
 
     @Test
-    void givenNullOutputDirectoryWhenCreatingOutputDirectoryThenThrowsIllegalArgumentException ()
+    void givenNullOutputDirectoryWhenCreatingOutputDirectoryThenThrowsIllegalArgumentException()
     {
         assertThrows(IllegalArgumentException.class, () -> PlantUmlMojo.createOutputDirectory(null));
     }
 
     @Test
     void givenFileInTheWayWhenCreatingOutputDirectoryThenThrowsUncheckedIOException(final @TempDir Path tempDir)
-            throws IOException {
+            throws IOException
+    {
         final Path offendingFilePath = tempDir.resolve("offendingFile");
         Files.createFile(offendingFilePath);
         final File offendingFile = offendingFilePath.toFile();
@@ -134,10 +135,11 @@ class PlantUmlMojoTest
 
     @Test
     void givenParentDirectoryReadOnlyWhenCreatingOutputDirectoryThenThrowsUncheckedIOException(
-            final @TempDir Path tempDir) throws IOException {
+            final @TempDir Path tempDir) throws IOException
+    {
         final Path readOnlyPath = tempDir.resolve("readOnlyDir");
         Files.createDirectory(readOnlyPath);
-        if(readOnlyPath.toFile().setReadOnly())
+        if (readOnlyPath.toFile().setReadOnly())
         {
             final File outputDirectory = readOnlyPath.resolve("output").toFile();
             assertThrows(UncheckedIOException.class, () -> PlantUmlMojo.createOutputDirectory(outputDirectory));

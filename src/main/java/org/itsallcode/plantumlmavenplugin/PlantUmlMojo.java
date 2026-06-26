@@ -238,6 +238,9 @@ public class PlantUmlMojo extends AbstractMojo
         }
     }
 
+    /**
+     * Source files configuration.
+     */
     public static final class SourceFiles
     {
         @Parameter(property = "sourceFiles.directory")
@@ -246,8 +249,12 @@ public class PlantUmlMojo extends AbstractMojo
         @Parameter
         private Includes includes;
 
+        /**
+         * Create a new instance of the source files configuration.
+         */
         public SourceFiles()
         {
+            // Intentionally empty.
         }
 
         SourceFiles(final File directory, final List<String> includes)
