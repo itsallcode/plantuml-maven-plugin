@@ -37,6 +37,7 @@
     <url>https://github.com/itsallcode/plantuml-maven-plugin</url>
   </scm>
   <properties>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -162,12 +163,32 @@
 
   <build>
     <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+                <execution>
+                    <?m2e ignore?>
+                    <goals>
+                        <goal>toolchain</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <toolchains>
+                    <jdk>
+                        <version>${java.version}</version>
+                    </jdk>
+                </toolchains>
+            </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.15.0</version>
         <configuration>
-          <release>17</release>
+          <release>${java.version}</release>
           <annotationProcessorPaths>
             <path>
               <groupId>org.apache.maven.plugins</groupId>
@@ -331,6 +352,7 @@
         <configuration>
           <goalPrefix>plantuml</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+          <requiredJavaVersion>${java.version}</requiredJavaVersion>
         </configuration>
         <executions>
           <execution>
