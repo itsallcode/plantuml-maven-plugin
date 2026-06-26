@@ -13,38 +13,45 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-class PlantUmlMojoTest {
+class PlantUmlMojoTest
+{
     @ParameterizedTest
-    @CsvSource({
+    @CsvSource(
+    {
             "png, PNG",
             "SVG, SVG",
             "' svg ', SVG"
     })
     void givenSupportedFormatWhenNormalizingThenMojoUsesUpperCaseValue(final String configuredFormat,
-            final ImageType expectedFormat) {
+            final ImageType expectedFormat)
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         assertThat(mojo.normalizeFormat(configuredFormat), is(expectedFormat));
     }
 
     @Test
-    void givenMissingFormatWhenNormalizingThenMojoUsesPngByDefault() {
+    void givenMissingFormatWhenNormalizingThenMojoUsesPngByDefault()
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         assertThat(mojo.normalizeFormat(null), is(ImageType.PNG));
     }
 
     @ParameterizedTest
-    @CsvSource({
+    @CsvSource(
+    {
             "' '",
             "jpg"
     })
-    void givenUnsupportedFormatWhenNormalizingThenMojoRejectsIt(final String configuredFormat) {
+    void givenUnsupportedFormatWhenNormalizingThenMojoRejectsIt(final String configuredFormat)
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         assertThrows(IllegalArgumentException.class, () -> mojo.normalizeFormat(configuredFormat));
     }
 
     @Test
     // [utest->dsn~select-source-files~1]
-    void givenMissingSourceDirectoryWhenNormalizingThenMojoRejectsIt() {
+    void givenMissingSourceDirectoryWhenNormalizingThenMojoRejectsIt()
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         final PlantUmlMojo.SourceFiles sourceFiles = new PlantUmlMojo.SourceFiles();
         assertThrows(IllegalArgumentException.class, () -> mojo.normalizeSourceFiles(sourceFiles));
@@ -52,7 +59,8 @@ class PlantUmlMojoTest {
 
     @Test
     // [utest->dsn~select-source-files~1]
-    void givenBlankIncludeWhenCompilingMatchersThenMojoRejectsIt() {
+    void givenBlankIncludeWhenCompilingMatchersThenMojoRejectsIt()
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         final List<String> includes = List.of(" ");
         assertThrows(IllegalArgumentException.class, () -> mojo.compileMatchers(includes));
@@ -68,17 +76,19 @@ class PlantUmlMojoTest {
     @ParameterizedTest
     // [utest->dsn~select-source-files~1]
     void givenInputFilesWhenCheckingIncludeThenMojoAcceptsIt(final String glob, final String relativePath,
-                                                             final boolean expectedAcceptance) {
+            final boolean expectedAcceptance)
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         final Path sourceRoot = Path.of("/tmp", "src");
         final File file = sourceRoot.resolve(relativePath).toFile();
-        assertThat(mojo.isIncludedPlantUmlFile(file, sourceRoot, mojo.compileMatchers(List.of(glob))),
+        assertThat(PlantUmlMojo.isIncludedPlantUmlFile(file, sourceRoot, mojo.compileMatchers(List.of(glob))),
                 is(expectedAcceptance));
     }
 
     @Test
     // [utest->dsn~preserve-relative-output-paths~1]
-    void givenNestedSourceFileWhenResolvingOutputDirectoryThenMojoPreservesRelativePath() throws Exception {
+    void givenNestedSourceFileWhenResolvingOutputDirectoryThenMojoPreservesRelativePath() throws Exception
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         final File outputDirectory = new File("/tmp/out");
         setField(mojo, "outputDirectory", outputDirectory);
@@ -90,7 +100,8 @@ class PlantUmlMojoTest {
 
     @Test
     // [utest->dsn~preserve-relative-output-paths~1]
-    void givenTopLevelSourceFileWhenResolvingOutputDirectoryThenMojoUsesConfiguredOutputDirectory() throws Exception {
+    void givenTopLevelSourceFileWhenResolvingOutputDirectoryThenMojoUsesConfiguredOutputDirectory() throws Exception
+    {
         final PlantUmlMojo mojo = new PlantUmlMojo();
         final File outputDirectory = new File("/tmp/out");
         setField(mojo, "outputDirectory", outputDirectory);
@@ -102,7 +113,8 @@ class PlantUmlMojoTest {
         assertThat(resolvedOutputDirectory, is(outputDirectory));
     }
 
-    private static void setField(final Object target, final String fieldName, final Object value) throws Exception {
+    private static void setField(final Object target, final String fieldName, final Object value) throws Exception
+    {
         final Field field = target.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(target, value);
