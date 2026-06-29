@@ -23,6 +23,10 @@ SonarCloud status:
 [![Technical Dept](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=sqale_index)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=org.itsallcode%3Aplantuml-maven-plugin&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=org.itsallcode%3Aplantuml-maven-plugin)
 
+* [Changelog](doc/changes/changelog.md)
+* [Code of conduct](CODE_OF_CONDUCT.md)
+* [Contributing](CONTRIBUTING.md)
+
 ## Configuration
 
 The plugin supports the configuration shape used by `com.github.jeluard:plantuml-maven-plugin` for source file selection, output format, and output directory.

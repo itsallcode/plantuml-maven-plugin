@@ -6,21 +6,33 @@ on:
   pull_request:
 
 jobs:
-  build:
-    name: Build
+  matrix-build:
+    name: Build with Java ${{ matrix.java }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-java-${{ matrix.java }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: true
+      matrix:
+        java: [17, 21, 25]
+    env:
+      DEFAULT_JAVA: 17
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Set up Java 17
+      - name: Set up Java
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17
+          java-version: ${{ matrix.java }}
           cache: maven
 
       - name: Cache SonarCloud packages
@@ -31,13 +43,54 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build, test, and trace
-        run: mvn --batch-mode clean verify
+        run: mvn --batch-mode clean verify -DossindexSkip=true -Djava.version=${{ matrix.java }}
 
       - name: Sonar analysis
-        if: ${{ env.SONAR_TOKEN != null }}
+        if: ${{ env.DEFAULT_JAVA == matrix.java && env.SONAR_TOKEN != null }}
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-              -Dsonar.token=$SONAR_TOKEN
+              -Dsonar.token=$SONAR_TOKEN \
+              -DossindexSkip=true \
+              -Djava.version=${{ matrix.java }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
+  ossindex:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+    - uses: actions/setup-java@v5
+      with:
+        cache: maven
+        distribution: temurin
+        java-version: 17
+        server-id: ossindex
+        server-username: OSSINDEX_USERNAME
+        server-password: OSSINDEX_TOKEN
+    - name: Ossindex
+      if: ${{ env.OSSINDEX_USERNAME != null && env.OSSINDEX_TOKEN != null }}
+      run: |
+        mvn --errors --batch-mode test-compile \
+            org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
+            org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
+            -DossindexSkip=false
+      env:
+        OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+        OSSINDEX_TOKEN: ${{ secrets.OSSINDEX_TOKEN }}
+
+  build:
+    name: Build
+    permissions:
+      contents: read
+    needs:
+      - matrix-build
+      - ossindex
+    runs-on: ubuntu-slim
+    steps:
+      - run: echo "Build successful"
